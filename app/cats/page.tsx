@@ -6,7 +6,40 @@ import { Button } from "@/components/ui/button";
 import { CatImage, fetchCatsAction } from "@/app/actions/cat-action";
 import { useQuery } from "@tanstack/react-query";
 
-export default function CatsPage() {
+type CatCardProps = {
+  cat: CatImage;
+};
+const CatCard = ({ cat }: CatCardProps) => {
+  return (
+    <div className="border rounded-lg overflow-hidden flex flex-col">
+      <div className="relative h-64 w-full">
+        <Image
+          src={cat.url}
+          alt={`Cat ${cat.id}`}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover"
+        />
+      </div>
+      <div className="p-4">
+        <p className="text-sm text-gray-500">ID: {cat.id}</p>
+        <p className="text-sm text-gray-500">
+          Size: {cat.width} x {cat.height}
+        </p>
+        <a
+          href={cat.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary hover:underline text-sm mt-2 inline-block"
+        >
+          View original image
+        </a>
+      </div>
+    </div>
+  );
+};
+
+const CatsPage = () => {
   const {
     data: cats,
     refetch,
@@ -46,34 +79,6 @@ export default function CatsPage() {
       )}
     </div>
   );
-}
+};
 
-function CatCard({ cat }: { cat: CatImage }) {
-  return (
-    <div className="border rounded-lg overflow-hidden flex flex-col">
-      <div className="relative h-64 w-full">
-        <Image
-          src={cat.url}
-          alt={`Cat ${cat.id}`}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover"
-        />
-      </div>
-      <div className="p-4">
-        <p className="text-sm text-gray-500">ID: {cat.id}</p>
-        <p className="text-sm text-gray-500">
-          Size: {cat.width} x {cat.height}
-        </p>
-        <a
-          href={cat.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-primary hover:underline text-sm mt-2 inline-block"
-        >
-          View original image
-        </a>
-      </div>
-    </div>
-  );
-}
+export default CatsPage;
