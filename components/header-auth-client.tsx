@@ -14,14 +14,6 @@ export default function AuthButtonClient() {
     return (
       <>
         <div className="flex gap-4 items-center">
-          <div>
-            <Badge
-              variant={"default"}
-              className="font-normal pointer-events-none"
-            >
-              Please update .env.local file with anon key and url
-            </Badge>
-          </div>
           <div className="flex gap-2">
             <Button
               asChild
@@ -68,7 +60,7 @@ export default function AuthButtonClient() {
   ) : (
     <div className="flex gap-2">
       <Button asChild size="sm" variant={"secondary"}>
-        <Link href="/cats">Cat Images</Link>
+        <Link href="/cats">Cats List</Link>
       </Button>
       <Button asChild size="sm" variant={"outline"}>
         <Link href="/sign-in">Sign in</Link>
