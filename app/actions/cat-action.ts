@@ -1,5 +1,7 @@
 'use server'
 
+import axios from 'axios';
+
 export type CatImage = {
     id: string;
     url: string;
@@ -16,24 +18,26 @@ export const fetchCatsAction = async (): Promise<CatImage[]> => {
             return [];
         }
 
-        const response = await fetch(
+        const response = await axios.get<CatImage[]>(
             "https://api.thecatapi.com/v1/images/search?limit=10",
             {
                 headers: {
                     "x-api-key": apiKey,
                 },
-                cache: "no-store",
             }
         );
 
-        if (!response.ok) {
-            throw new Error(`Failed to fetch cats: ${response.status} ${response.statusText}`);
-        }
-
-        const data: CatImage[] = await response.json();
-        return data;
+        return response.data;
     } catch (error) {
-        console.error("Error fetching cats:", error);
+        if (axios.isAxiosError(error)) {
+            console.error("Axios error fetching cats:", {
+                status: error.response?.status,
+                statusText: error.response?.statusText,
+                message: error.message
+            });
+        } else {
+            console.error("Error fetching cats:", error);
+        }
         return [];
     }
 };
