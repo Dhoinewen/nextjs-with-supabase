@@ -49,7 +49,7 @@ export default function RootLayout({
                       <div className="flex gap-5 items-center font-semibold">
                         <Link href={"/"}>Cats Site</Link>
                       </div>
-                      {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuthClient />}
+                      <HeaderAuthClient />
                     </div>
                   </nav>
                   <div className="flex flex-col max-w-5xl p-5">
