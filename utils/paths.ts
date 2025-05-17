@@ -3,5 +3,6 @@ export const paths = {
     protected: '/protected',
     signIn: '/sign-in',
     signUp: '/sign-up',
-    cats: '/cats'
+    cats: '/cats',
+    profile: '/profile'
 }

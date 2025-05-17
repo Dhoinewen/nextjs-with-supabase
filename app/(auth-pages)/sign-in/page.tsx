@@ -21,7 +21,7 @@ const Login = () => {
     const signInResult = await signInAction(formData);
     if (signInResult.success) {
       await refreshUser();
-      router.push(paths.protected);
+      router.push(paths.profile);
     } else {
       setSignInError("Something went wrong!");
     }
