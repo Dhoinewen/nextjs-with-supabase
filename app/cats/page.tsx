@@ -12,12 +12,12 @@ type CatCardProps = {
 const CatCard = ({ cat }: CatCardProps) => {
   return (
     <div className="border rounded-lg overflow-hidden flex flex-col">
-      <div className="relative h-64 w-full">
+      <div className="relative h-64 w-56">
         <Image
           src={cat.url}
           alt={`Cat ${cat.id}`}
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover"
         />
       </div>
@@ -73,7 +73,7 @@ const CatsPage = () => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {cats?.map((cat) => <CatCard key={cat.id} cat={cat} />)}
         </div>
       )}
