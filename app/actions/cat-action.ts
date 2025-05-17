@@ -11,7 +11,7 @@ export type CatImage = {
 
 export const fetchCatsAction = async (): Promise<CatImage[]> => {
   try {
-    const apiKey = process.env.CATS_API_KEY;
+    const apiKey: string = process.env.CATS_API_KEY || "";
 
     if (!apiKey) {
       console.error("CATS_API_KEY environment variable is not set");
@@ -19,11 +19,11 @@ export const fetchCatsAction = async (): Promise<CatImage[]> => {
     }
 
     const response = await axios.get(
-      "https://api.thecatapi.com/v1/images/search?limit=10",
+      "https://api.thecatapi.com/v1/images/search?limit=20",
       {
           headers: {
-              Authorization: apiKey
-          }
+              'x-api-key': apiKey
+          },
       },
     );
 
