@@ -6,6 +6,7 @@ import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { UserProvider } from "@/context/UserContext";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import Link from "next/link";
 import "./globals.css";
 
@@ -74,6 +75,7 @@ export default function RootLayout({
             </main>
           </UserProvider>
         </ThemeProvider>
+        <SpeedInsights/>
       </body>
     </html>
   );
