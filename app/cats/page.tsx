@@ -1,7 +1,8 @@
-import { fetchCatsAction, CatImage } from "@/app/actions";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {CatImage, fetchCatsAction} from "@/app/actions/cat-action";
+
 
 export const metadata = {
   title: "Cat Images | Next.js with Supabase",
