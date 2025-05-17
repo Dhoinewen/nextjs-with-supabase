@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CatImage, fetchCatsAction } from "@/app/actions/cat-action";
 import { useQuery } from "@tanstack/react-query";
+import Loader from "@/components/loaders/loader";
 
 type CatCardProps = {
   cat: CatImage;
@@ -51,14 +52,12 @@ const CatsPage = () => {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex justify-between items-center">
+      <div className="flex items-center">
         <h1 className="text-3xl font-bold">Cat Images</h1>
       </div>
 
       {isLoading ? (
-        <div className="flex flex-col items-center justify-center p-8 border rounded-md">
-          <p className="text-lg text-center mb-4">Loading cat images...</p>
-        </div>
+        <Loader/>
       ) : cats?.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-8 border rounded-md">
           <p className="text-lg text-center mb-4">
