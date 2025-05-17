@@ -1,40 +1,55 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {CatImage, fetchCatsAction} from "@/app/actions/cat-action";
+import { CatImage, fetchCatsAction } from "@/app/actions/cat-action";
+import { useQuery } from "@tanstack/react-query";
 
-
-export const metadata = {
-  title: "Cat Images | Next.js with Supabase",
-  description: "A page displaying random cat images from The Cat API",
-};
-
-export default async function CatsPage() {
-  const cats = await fetchCatsAction();
+export default function CatsPage() {
+  const {
+    data: cats,
+    refetch,
+    isLoading,
+  } = useQuery({
+    queryKey: ["cats"],
+    queryFn: fetchCatsAction,
+  });
 
   return (
     <div className="flex-1 w-full flex flex-col gap-8">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Cat Images</h1>
-        <Link href="/">
-          <Button variant="outline">Back to Home</Button>
-        </Link>
+        <div className="flex gap-2">
+          <Button onClick={() => refetch()} variant="secondary">
+            Refresh Cats
+          </Button>
+          <Link href="/">
+            <Button variant="outline">Back to Home</Button>
+          </Link>
+        </div>
       </div>
 
-      {cats.length === 0 ? (
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center p-8 border rounded-md">
+          <p className="text-lg text-center mb-4">Loading cat images...</p>
+        </div>
+      ) : cats?.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-8 border rounded-md">
           <p className="text-lg text-center mb-4">
-            No cat images found. There might be an issue with the API or the API key.
+            No cat images found. There might be an issue with the API or the API
+            key.
           </p>
-          <Link href="/">
-            <Button>Go back home</Button>
-          </Link>
+          <div className="flex gap-2">
+            <Button onClick={() => refetch()}>Try Again</Button>
+            <Link href="/">
+              <Button variant="outline">Go back home</Button>
+            </Link>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cats.map((cat) => (
-            <CatCard key={cat.id} cat={cat} />
-          ))}
+          {cats?.map((cat) => <CatCard key={cat.id} cat={cat} />)}
         </div>
       )}
     </div>
