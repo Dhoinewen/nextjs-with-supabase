@@ -17,17 +17,9 @@ export default function CatsPage() {
   });
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-8">
+    <div className="flex flex-col gap-8">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Cat Images</h1>
-        <div className="flex gap-2">
-          <Button onClick={() => refetch()} variant="secondary">
-            Refresh Cats
-          </Button>
-          <Link href="/">
-            <Button variant="outline">Back to Home</Button>
-          </Link>
-        </div>
       </div>
 
       {isLoading ? (
