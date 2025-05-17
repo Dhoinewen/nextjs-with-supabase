@@ -1,18 +1,44 @@
+"use client";
+
 import { signInAction } from "@/app/actions";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { useUser } from "@/context/UserContext";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { paths } from "@/utils/paths";
 
-export default async function Login(props: { searchParams: Promise<Message> }) {
-  const searchParams = await props.searchParams;
+const Login = () => {
+  const { refreshUser } = useUser();
+  const router = useRouter();
+
+  const [signInError, setSignInError] = useState<string>("");
+
+  const handleSignIn = async (formData: FormData) => {
+    const signInResult = await signInAction(formData);
+    if (signInResult.success) {
+      await refreshUser();
+      router.push(paths.protected);
+    } else {
+      setSignInError("Something went wrong!");
+    }
+  };
+
   return (
-    <form className="flex-1 flex flex-col min-w-64">
+    <form
+      className="flex-1 flex flex-col min-w-64"
+      onChange={() => setSignInError("")}
+    >
       <h1 className="text-2xl font-medium">Sign in</h1>
       <p className="text-sm text-foreground">
         Don't have an account?{" "}
-        <Link className="text-foreground font-medium underline" href="/sign-up">
+        <Link
+          className="text-foreground font-medium underline"
+          href={paths.signUp}
+        >
           Sign up
         </Link>
       </p>
@@ -22,8 +48,8 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
         <div className="flex justify-between items-center">
           <Label htmlFor="password">Password</Label>
           <Link
-            className="text-xs text-foreground underline"
             href="/forgot-password"
+            className="text-xs text-foreground underline"
           >
             Forgot Password?
           </Link>
@@ -34,11 +60,16 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
           placeholder="Your password"
           required
         />
-        <SubmitButton pendingText="Signing In..." formAction={signInAction}>
+        <SubmitButton
+          pendingText="Signing In..."
+          formAction={(formData) => handleSignIn(formData)}
+        >
           Sign in
         </SubmitButton>
-        <FormMessage message={searchParams} />
+        {signInError && <FormMessage message={{ error: signInError }} />}
       </div>
     </form>
   );
-}
+};
+
+export default Login;
