@@ -1,7 +1,7 @@
 import HeaderAuthClient from "@/components/header-auth-client";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
-import { UserProvider, useUser } from "@/context/UserContext";
+import { UserProvider } from "@/context/UserContext";
 import { QueryProvider } from "@/context/QueryProvider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Link from "next/link";
@@ -44,9 +44,11 @@ export default function RootLayout({
                 <div className="flex-1 w-full flex flex-col items-center">
                   <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
                     <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
-                      <div className="flex gap-5 items-center font-semibold">
+                      <div className="flex gap-8 items-center font-semibold">
                         <Link href={paths.home}>Cats Site</Link>
-                        <Link href={paths.cats}>Cats List</Link>
+                        <div className="flex gap-4 items-center font-semibold">
+                          <Link href={paths.cats}>Cats List</Link>
+                        </div>
                       </div>
                       <HeaderAuthClient />
                     </div>

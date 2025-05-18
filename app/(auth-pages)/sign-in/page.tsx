@@ -29,7 +29,7 @@ const Login = () => {
 
   return (
     <form
-      className="flex-1 flex flex-col min-w-64"
+      className="flex-1 flex flex-col min-w-64 min-h-[calc(100vh-104px)] justify-center"
       onChange={() => setSignInError("")}
     >
       <h1 className="text-2xl font-medium">Sign in</h1>
