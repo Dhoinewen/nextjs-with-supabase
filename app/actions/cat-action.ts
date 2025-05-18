@@ -9,7 +9,7 @@ export type CatImage = {
   height: number;
 };
 
-export const fetchCatsAction = async (): Promise<CatImage[]> => {
+export const fetchCatsAction = async (type: 'gif' | 'jpg,png' | 'jpg,png,gif'): Promise<CatImage[]> => {
   try {
     const apiKey: string = process.env.CATS_API_KEY || "";
 
@@ -26,7 +26,7 @@ export const fetchCatsAction = async (): Promise<CatImage[]> => {
         },
         params: {
           limit: 10,
-          mime_types: "gif",
+          mime_types: type,
         },
       },
     );

@@ -47,7 +47,7 @@ const CatsPage = () => {
     isLoading,
   } = useQuery({
     queryKey: ["cats"],
-    queryFn: fetchCatsAction,
+    queryFn: () => fetchCatsAction('gif'),
   });
 
   return (
