@@ -19,13 +19,19 @@ export const fetchCatsAction = async (): Promise<CatImage[]> => {
     }
 
     const response = await axios.get(
-      "https://api.thecatapi.com/v1/images/search?limit=20",
+      "https://api.thecatapi.com/v1/images/search",
       {
-          headers: {
-              'x-api-key': apiKey
-          },
+        headers: {
+          "x-api-key": apiKey,
+        },
+        params: {
+          limit: 10,
+          mime_types: "gif",
+        },
       },
     );
+
+    console.log("===> RESPONSE", response.data);
 
     return response.data;
   } catch (error) {
