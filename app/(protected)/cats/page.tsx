@@ -57,7 +57,7 @@ const CatsPage = () => {
       </div>
 
       {isLoading ? (
-        <Loader/>
+        <Loader />
       ) : cats?.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-8 border rounded-md">
           <p className="text-lg text-center mb-4">
