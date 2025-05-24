@@ -50,6 +50,8 @@ const CatsPage = () => {
     queryFn: () => fetchCatsAction('gif'),
   });
 
+  console.log("===> CATS", cats)
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center">

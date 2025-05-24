@@ -7,6 +7,7 @@ export type CatImage = {
   url: string;
   width: number;
   height: number;
+  breeds: any[]
 };
 
 export const fetchCatsAction = async (type: 'gif' | 'jpg,png' | 'jpg,png,gif'): Promise<CatImage[]> => {
