@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { CatImage, fetchCatsAction, getCatsWithLikesAction } from "@/app/actions/cat-action";
+import { CatImage, fetchCatsAction, getCatsWithLikesAction, getPopularCatsAction } from "@/app/actions/cat-action";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "@/components/loaders/loader";
 import CatLikeButton from "@/components/cat-like-button";
@@ -63,6 +63,15 @@ const CatsPage = () => {
     queryFn: () => fetchCatsAction('gif'),
   });
 
+  const {
+    data: popularCats,
+    isLoading: isLoadingPopular,
+    refetch: refetchPopular,
+  } = useQuery({
+    queryKey: ["popular-cats"],
+    queryFn: () => getPopularCatsAction(6),
+  });
+
   // Fetch like data for cats when cats data changes
   useEffect(() => {
     if (cats && cats.length > 0) {
@@ -95,8 +104,34 @@ const CatsPage = () => {
 
   return (
     <div className="flex flex-col gap-8">
+      {/* Popular Cats Section */}
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">🔥 Popular Cats</h2>
+          <Button onClick={() => refetchPopular()} variant="outline" size="sm">
+            Refresh Popular
+          </Button>
+        </div>
+
+        {isLoadingPopular ? (
+          <Loader />
+        ) : popularCats && popularCats.length > 0 ? (
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {popularCats.map((cat) => <CatCard key={cat.id} cat={cat} />)}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center p-8 border rounded-md bg-gray-50">
+            <p className="text-lg text-center mb-2">No popular cats yet!</p>
+            <p className="text-sm text-gray-600 text-center">
+              Start liking some cats to see them appear here.
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Main Cats Section */}
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Cat Images</h1>
+        <h1 className="text-3xl font-bold">Latest Cat Images</h1>
         <Button onClick={() => refetch()} variant="outline">
           Refresh Cats
         </Button>

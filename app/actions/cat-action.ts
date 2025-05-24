@@ -228,6 +228,99 @@ export const toggleCatLikeAction = async (catApiId: string): Promise<{ success: 
 };
 
 /**
+ * Get popular cats from database ordered by likes count
+ */
+export const getPopularCatsAction = async (limit: number = 6): Promise<CatImage[]> => {
+  try {
+    const supabase = await createClient();
+
+    // Get current user (might be null if not authenticated)
+    const { data: { user } } = await supabase.auth.getUser();
+
+    // First, get all cats that have at least one like
+    const { data: likedCatIds, error: likedCatsError } = await supabase
+      .from('cat_likes')
+      .select('cat_id')
+      .order('cat_id');
+
+    if (likedCatsError) {
+      console.error('Error fetching liked cats:', likedCatsError);
+      return [];
+    }
+
+    if (!likedCatIds || likedCatIds.length === 0) {
+      return [];
+    }
+
+    // Count likes per cat
+    const likeCountMap = new Map<number, number>();
+    likedCatIds.forEach(like => {
+      const currentCount = likeCountMap.get(like.cat_id) || 0;
+      likeCountMap.set(like.cat_id, currentCount + 1);
+    });
+
+    // Get the most liked cat IDs
+    const sortedCatIds = Array.from(likeCountMap.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, limit)
+      .map(([catId]) => catId);
+
+    if (sortedCatIds.length === 0) {
+      return [];
+    }
+
+    // Get cat data for the most liked cats
+    const { data: catsData, error: catsError } = await supabase
+      .from('cats')
+      .select('id, api_id, image_url, width, height')
+      .in('id', sortedCatIds);
+
+    if (catsError) {
+      console.error('Error fetching popular cats data:', catsError);
+      return [];
+    }
+
+    if (!catsData || catsData.length === 0) {
+      return [];
+    }
+
+    // If user is authenticated, get their likes
+    let userLikes: string[] = [];
+    if (user) {
+      const { data: userLikesData, error: userLikesError } = await supabase
+        .from('cat_likes')
+        .select('cat_id')
+        .eq('user_id', user.id)
+        .in('cat_id', sortedCatIds);
+
+      if (!userLikesError && userLikesData) {
+        userLikes = userLikesData.map(like => like.cat_id.toString());
+      }
+    }
+
+    // Transform data to CatImage format and sort by like count
+    const popularCats: CatImage[] = catsData
+      .map(cat => ({
+        id: cat.api_id,
+        url: cat.image_url,
+        width: cat.width,
+        height: cat.height,
+        breeds: [],
+        dbId: cat.id,
+        likeCount: likeCountMap.get(cat.id) || 0,
+        isLikedByUser: userLikes.includes(cat.id.toString()),
+      }))
+      .sort((a, b) => (b.likeCount || 0) - (a.likeCount || 0))
+      .filter(cat => (cat.likeCount || 0) > 0); // Only show cats with at least 1 like
+
+    return popularCats;
+  } catch (error) {
+    console.error('Unexpected error fetching popular cats:', error);
+    return [];
+  }
+};
+
+/**
  * Get cats with like data from database
  */
 export const getCatsWithLikesAction = async (catApiIds: string[]): Promise<CatImage[]> => {

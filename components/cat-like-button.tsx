@@ -16,16 +16,16 @@ interface CatLikeButtonProps {
   showSignInRequired?: boolean;
 }
 
-export default function CatLikeButton({ 
-  catApiId, 
-  initialLikeCount, 
+export default function CatLikeButton({
+  catApiId,
+  initialLikeCount,
   initialIsLiked,
-  showSignInRequired = true 
+  showSignInRequired = true
 }: CatLikeButtonProps) {
   const { user, isLoading } = useUser();
   const router = useRouter();
   const queryClient = useQueryClient();
-  
+
   const [likeCount, setLikeCount] = useState(initialLikeCount);
   const [isLiked, setIsLiked] = useState(initialIsLiked);
 
@@ -35,10 +35,10 @@ export default function CatLikeButton({
       // Optimistic update
       const newIsLiked = !isLiked;
       const newLikeCount = newIsLiked ? likeCount + 1 : likeCount - 1;
-      
+
       setIsLiked(newIsLiked);
       setLikeCount(newLikeCount);
-      
+
       return { previousIsLiked: isLiked, previousLikeCount: likeCount };
     },
     onError: (error, variables, context) => {
@@ -54,8 +54,9 @@ export default function CatLikeButton({
       if (data.success) {
         setIsLiked(data.isLiked);
         setLikeCount(data.likeCount);
-        // Invalidate cats query to refresh data
+        // Invalidate cats queries to refresh data
         queryClient.invalidateQueries({ queryKey: ['cats'] });
+        queryClient.invalidateQueries({ queryKey: ['popular-cats'] });
       }
     },
   });
@@ -67,7 +68,7 @@ export default function CatLikeButton({
       }
       return;
     }
-    
+
     likeMutation.mutate();
   };
 
@@ -90,13 +91,13 @@ export default function CatLikeButton({
         onClick={handleLikeClick}
         disabled={likeMutation.isPending}
         className={`transition-colors ${
-          isLiked 
-            ? 'text-red-500 hover:text-red-600' 
+          isLiked
+            ? 'text-red-500 hover:text-red-600'
             : 'text-gray-400 hover:text-red-500'
         }`}
       >
-        <Heart 
-          className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} 
+        <Heart
+          className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`}
         />
       </Button>
       <span className="text-sm text-gray-500">
