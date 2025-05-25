@@ -3,11 +3,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { CatImage, fetchCatsAction, getCatsWithLikesAction, getPopularCatsAction } from "@/app/actions/cat-action";
+import {
+  CatImage,
+  fetchCatsAction,
+  getCatsWithLikesAction,
+  getPopularCatsAction,
+} from "@/app/actions/cat-action";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "@/components/loaders/loader";
 import CatLikeButton from "@/components/cat-like-button";
 import { useEffect, useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type CatCardProps = {
   cat: CatImage;
@@ -60,7 +66,7 @@ const CatsPage = () => {
     isLoading,
   } = useQuery({
     queryKey: ["cats"],
-    queryFn: () => fetchCatsAction('gif'),
+    queryFn: () => fetchCatsAction("gif"),
   });
 
   const {
@@ -76,12 +82,12 @@ const CatsPage = () => {
   useEffect(() => {
     if (cats && cats.length > 0) {
       const fetchLikeData = async () => {
-        const catApiIds = cats.map(cat => cat.id);
+        const catApiIds = cats.map((cat) => cat.id);
         const catsWithLikeData = await getCatsWithLikesAction(catApiIds);
 
         // Merge API data with like data
-        const mergedCats = cats.map(cat => {
-          const catWithLikes = catsWithLikeData.find(c => c.id === cat.id);
+        const mergedCats = cats.map((cat) => {
+          const catWithLikes = catsWithLikeData.find((c) => c.id === cat.id);
           return {
             ...cat,
             dbId: catWithLikes?.dbId,
@@ -104,59 +110,74 @@ const CatsPage = () => {
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Popular Cats Section */}
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">🔥 Popular Cats</h2>
-          <Button onClick={() => refetchPopular()} variant="outline" size="sm">
-            Refresh Popular
-          </Button>
-        </div>
+      <Tabs defaultValue="account">
+        <TabsList>
+          <TabsTrigger value="account">Account</TabsTrigger>
+          <TabsTrigger value="password">Password</TabsTrigger>
+        </TabsList>
+        <TabsContent value="account">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-3xl font-bold">Latest Cat Images</h1>
+              <Button onClick={() => refetch()} variant="outline">
+                Refresh Cats
+              </Button>
+            </div>
 
-        {isLoadingPopular ? (
-          <Loader />
-        ) : popularCats && popularCats.length > 0 ? (
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {popularCats.map((cat) => <CatCard key={cat.id} cat={cat} />)}
+            {isLoading ? (
+                <Loader />
+            ) : cats?.length === 0 ? (
+                <div className="flex flex-col items-center justify-center p-8 border rounded-md">
+                  <p className="text-lg text-center mb-4">
+                    No cat images found. There might be an issue with the API or the API
+                    key.
+                  </p>
+                  <div className="flex gap-2">
+                    <Button onClick={() => refetch()}>Try Again</Button>
+                    <Link href="/">
+                      <Button variant="outline">Go back home</Button>
+                    </Link>
+                  </div>
+                </div>
+            ) : (
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {catsWithLikes?.map((cat) => <CatCard key={cat.id} cat={cat} />)}
+                </div>
+            )}
           </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center p-8 border rounded-md bg-gray-50">
-            <p className="text-lg text-center mb-2">No popular cats yet!</p>
-            <p className="text-sm text-gray-600 text-center">
-              Start liking some cats to see them appear here.
-            </p>
-          </div>
-        )}
-      </div>
+        </TabsContent>
+        <TabsContent value="password">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold">🔥 Popular Cats</h2>
+              <Button
+                onClick={() => refetchPopular()}
+                variant="outline"
+                size="sm"
+              >
+                Refresh Popular
+              </Button>
+            </div>
 
-      {/* Main Cats Section */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Latest Cat Images</h1>
-        <Button onClick={() => refetch()} variant="outline">
-          Refresh Cats
-        </Button>
-      </div>
-
-      {isLoading ? (
-        <Loader />
-      ) : cats?.length === 0 ? (
-        <div className="flex flex-col items-center justify-center p-8 border rounded-md">
-          <p className="text-lg text-center mb-4">
-            No cat images found. There might be an issue with the API or the API
-            key.
-          </p>
-          <div className="flex gap-2">
-            <Button onClick={() => refetch()}>Try Again</Button>
-            <Link href="/">
-              <Button variant="outline">Go back home</Button>
-            </Link>
+            {isLoadingPopular ? (
+              <Loader />
+            ) : popularCats && popularCats.length > 0 ? (
+              <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {popularCats.map((cat) => (
+                  <CatCard key={cat.id} cat={cat} />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center p-8 border rounded-md bg-gray-50">
+                <p className="text-lg text-center mb-2">No popular cats yet!</p>
+                <p className="text-sm text-gray-600 text-center">
+                  Start liking some cats to see them appear here.
+                </p>
+              </div>
+            )}
           </div>
-        </div>
-      ) : (
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {catsWithLikes?.map((cat) => <CatCard key={cat.id} cat={cat} />)}
-        </div>
-      )}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
