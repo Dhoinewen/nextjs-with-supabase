@@ -115,13 +115,10 @@ const CatsPage = () => {
           <TabsTrigger value="all" className={'w-1/2'}>All</TabsTrigger>
           <TabsTrigger value="popular" className={'w-1/2'}>Popular</TabsTrigger>
         </TabsList>
-        <TabsContent value="all">
+        <TabsContent value="all" className="mt-4">
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
-              <h1 className="text-3xl font-bold">Latest Cat Images</h1>
-              <Button onClick={() => refetch()} variant="outline">
-                Refresh Cats
-              </Button>
+              <h1 className="text-3xl font-bold">Cats</h1>
             </div>
 
             {isLoading ? (
@@ -146,10 +143,10 @@ const CatsPage = () => {
             )}
           </div>
         </TabsContent>
-        <TabsContent value="popular">
+        <TabsContent value="popular" className="mt-4">
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">🔥 Popular Cats</h2>
+              <h2 className="text-3xl font-bold">Popular</h2>
               <Button
                 onClick={() => refetchPopular()}
                 variant="outline"
