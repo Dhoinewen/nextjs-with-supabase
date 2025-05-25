@@ -110,12 +110,12 @@ const CatsPage = () => {
 
   return (
     <div className="flex flex-col gap-8">
-      <Tabs defaultValue="account">
-        <TabsList>
-          <TabsTrigger value="account">Account</TabsTrigger>
-          <TabsTrigger value="password">Password</TabsTrigger>
+      <Tabs defaultValue="all">
+        <TabsList className={"w-full"}>
+          <TabsTrigger value="all" className={'w-1/2'}>All</TabsTrigger>
+          <TabsTrigger value="popular" className={'w-1/2'}>Popular</TabsTrigger>
         </TabsList>
-        <TabsContent value="account">
+        <TabsContent value="all">
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <h1 className="text-3xl font-bold">Latest Cat Images</h1>
@@ -146,7 +146,7 @@ const CatsPage = () => {
             )}
           </div>
         </TabsContent>
-        <TabsContent value="password">
+        <TabsContent value="popular">
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold">🔥 Popular Cats</h2>
