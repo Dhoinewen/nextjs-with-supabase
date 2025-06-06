@@ -7,6 +7,12 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import Link from "next/link";
 import "./globals.css";
 import { paths } from "@/utils/paths";
+import Clarity from '@microsoft/clarity';
+
+const CLARITY_PROJECT_ID = 'rvfw5dt9vk'
+
+Clarity.init(CLARITY_PROJECT_ID);
+
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -28,6 +34,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  Clarity.identify("custom-id", "custom-session-id", "custom-page-id", "friendly-name"); // only custom-id is required
+
+
   // const {user} = useUser()
   return (
     <html lang="en" className={geistSans.className} suppressHydrationWarning>
