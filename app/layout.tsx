@@ -4,14 +4,10 @@ import { ThemeProvider } from "next-themes";
 import { UserProvider } from "@/context/UserContext";
 import { QueryProvider } from "@/context/QueryProvider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import ClarityAnalytics from "@/components/clarity-analytics";
 import Link from "next/link";
 import "./globals.css";
 import { paths } from "@/utils/paths";
-import Clarity from '@microsoft/clarity';
-
-const CLARITY_PROJECT_ID = 'rvfw5dt9vk'
-
-Clarity.init(CLARITY_PROJECT_ID);
 
 
 const defaultUrl = process.env.VERCEL_URL
@@ -34,10 +30,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  Clarity.identify("custom-id", "custom-session-id", "custom-page-id", "friendly-name"); // only custom-id is required
-
-
-  // const {user} = useUser()
   return (
     <html lang="en" className={geistSans.className} suppressHydrationWarning>
       <body className="bg-background text-foreground">
@@ -68,6 +60,7 @@ export default function RootLayout({
             </QueryProvider>
           </UserProvider>
         </ThemeProvider>
+        <ClarityAnalytics />
         <SpeedInsights />
       </body>
     </html>
